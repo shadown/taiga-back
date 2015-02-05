@@ -25,6 +25,7 @@ from taiga.mdrender.service import render as mdrender
 from taiga.projects.validators import ProjectExistsValidator, UserStoryStatusExistsValidator
 from taiga.projects.userstories.validators import UserStoryExistsValidator
 from taiga.projects.notifications.validators import WatchersValidator
+from taiga.projects.custom_attributes.mixins.serializers import UserStoryCustomAttributeValuesSerializerMixin
 
 from . import models
 
@@ -39,7 +40,7 @@ class RolePointsField(serializers.WritableField):
         return json.loads(obj)
 
 
-class UserStorySerializer(WatchersValidator, ModelSerializer):
+class UserStorySerializer(UserStoryCustomAttributeValuesSerializerMixin, WatchersValidator, ModelSerializer):
     tags = TagsField(default=[], required=False)
     external_reference = PgArrayField(required=False)
     points = RolePointsField(source="role_points", required=False)
@@ -104,8 +105,7 @@ class NeighborUserStorySerializer(ModelSerializer):
         depth = 0
 
 
-class UserStoriesBulkSerializer(ProjectExistsValidator, UserStoryStatusExistsValidator,
-                                Serializer):
+class UserStoriesBulkSerializer(ProjectExistsValidator, UserStoryStatusExistsValidator, Serializer):
     project_id = serializers.IntegerField()
     status_id = serializers.IntegerField(required=False)
     bulk_stories = serializers.CharField()
@@ -118,8 +118,6 @@ class _UserStoryOrderBulkSerializer(UserStoryExistsValidator, Serializer):
     order = serializers.IntegerField()
 
 
-class UpdateUserStoriesOrderBulkSerializer(ProjectExistsValidator,
-                                                 UserStoryStatusExistsValidator,
-                                                 Serializer):
+class UpdateUserStoriesOrderBulkSerializer(ProjectExistsValidator, UserStoryStatusExistsValidator, Serializer):
     project_id = serializers.IntegerField()
     bulk_stories = _UserStoryOrderBulkSerializer(many=True)

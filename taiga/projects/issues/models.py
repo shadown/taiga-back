@@ -26,12 +26,14 @@ from djorm_pgarray.fields import TextArrayField
 from taiga.projects.occ import OCCModelMixin
 from taiga.projects.notifications.mixins import WatchedModelMixin
 from taiga.projects.mixins.blocked import BlockedMixin
+from taiga.projects.custom_attributes.mixins.models import CustomAttributeValuesModelMixin
 from taiga.base.tags import TaggedMixin
 
 from taiga.projects.services.tags_colors import update_project_tags_colors_handler, remove_unused_tags
 
 
-class Issue(OCCModelMixin, WatchedModelMixin, BlockedMixin, TaggedMixin, models.Model):
+class Issue(CustomAttributeValuesModelMixin, OCCModelMixin, WatchedModelMixin, BlockedMixin, TaggedMixin,
+            models.Model):
     ref = models.BigIntegerField(db_index=True, null=True, blank=True, default=None,
                                  verbose_name=_("ref"))
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, default=None,

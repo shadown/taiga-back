@@ -25,10 +25,12 @@ from djorm_pgarray.fields import TextArrayField
 from taiga.projects.occ import OCCModelMixin
 from taiga.projects.notifications.mixins import WatchedModelMixin
 from taiga.projects.mixins.blocked import BlockedMixin
+from taiga.projects.custom_attributes.mixins.models import CustomAttributeValuesModelMixin
 from taiga.base.tags import TaggedMixin
 
 
-class Task(OCCModelMixin, WatchedModelMixin, BlockedMixin, TaggedMixin, models.Model):
+class Task(CustomAttributeValuesModelMixin, OCCModelMixin, WatchedModelMixin, BlockedMixin, TaggedMixin,
+           models.Model):
     user_story = models.ForeignKey("userstories.UserStory", null=True, blank=True,
                                    related_name="tasks", verbose_name=_("user story"))
     ref = models.BigIntegerField(db_index=True, null=True, blank=True, default=None,

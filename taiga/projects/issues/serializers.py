@@ -16,17 +16,18 @@
 
 from rest_framework import serializers
 
-from taiga.base.serializers import (Serializer, TagsField, NeighborsSerializerMixin, 
+from taiga.base.serializers import (Serializer, TagsField, NeighborsSerializerMixin,
         PgArrayField, ModelSerializer)
 
 from taiga.mdrender.service import render as mdrender
 from taiga.projects.validators import ProjectExistsValidator
 from taiga.projects.notifications.validators import WatchersValidator
+from taiga.projects.custom_attributes.mixins.serializers import IssueCustomAttributeValuesSerializerMixin
 
 from . import models
 
 
-class IssueSerializer(WatchersValidator, ModelSerializer):
+class IssueSerializer(IssueCustomAttributeValuesSerializerMixin, WatchersValidator, ModelSerializer):
     tags = TagsField(required=False)
     external_reference = PgArrayField(required=False)
     is_closed = serializers.Field(source="is_closed")
